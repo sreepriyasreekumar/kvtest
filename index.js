@@ -25,11 +25,15 @@ app.get('/secret', async(req, res) => {
     try{
         let kvUrl = "https://block2vault.vault.azure.net/secrets/secret?api-version=2016-10-01";
         let tokenData = await getToken();
+        console.log("Printing Token Data");
+        console.log(tokenData);
         let token = tokenData.access_token;
+        console.log("Printing token");
+        console.log(token);
         let secretData = await axios.get(kvUrl, {headers: {'Authorization': `Bearer ${token}`}});
         console.log("Printing secret data");
         console.log(secretData);
-
+        res.status(200).send(secretData);
     }catch(err) {
         console.log("Error occurred");
         console.log(err);
