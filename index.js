@@ -62,24 +62,5 @@ app.put('/secret', async(req, res) => {
 });
 
 
-app.post('/secret', async(req, res) => {
-    try{
-        if(req.body.name && req.body.value) {
-            let kvUrl = `https://block2vault.vault.azure.net/secrets/${req.body.name}?api-version=2016-10-01`;
-            let token = await getToken();   
-            let createSecretResult = await axios.post(kvUrl, {'value':req.body.value}, {headers: {'Authorization': `Bearer ${token}`}});
-            console.log(createSecretResult);
-            console.log("Created Secret");
-            res.status(200).send(createSecretResult);
-        }else {
-            res.status(500).send("Secret should have a name and value");
-        }        
-    }catch(err) {
-        console.log(err);
-        console.log("Error occurred in secret create endpoint");
-        res.status(500).send(err);
-    }
-});
-
 
 
