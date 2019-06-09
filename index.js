@@ -16,7 +16,7 @@ app.get('/token', async(req, res) => {
         res.status(200).send(result.data);
     }catch(err) {
         console.log(err);
-        console.log("Error occurred");
+        console.log("Error occurred in token fetching end point");
         res.status(500).send(err);
     }
 });
@@ -32,7 +32,7 @@ app.get('/secret', async(req, res) => {
         res.status(200).send(secretData);
     }catch(err) {
         console.log(err);
-        console.log("Error occurred");
+        console.log("Error occurred in secret fetch endpoint");
         res.status(500).send(err);
     }
 });
@@ -45,7 +45,7 @@ const getToken = async () => {
         return tokenData;
     }catch(err) {
         console.log(err);
-        console.log("Error occurred");
+        console.log("Error occurred in fetching token");
     }
 }
 
