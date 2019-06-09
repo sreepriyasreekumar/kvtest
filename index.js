@@ -10,14 +10,24 @@ app.listen(3000, () => {
 });
 
 
-
-app.get('/testMe', async(req, res) => {
+app.get('/token', async(req, res) => {
     try{
-        console.log("invoking get token");
         let result = await getToken();
-        console.log("Get token result: ");
-        console.log(result);
         res.status(200).send(result.data);
+    }catch(err) {
+        console.log("Error occurred");
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
+app.get('/secret', async(req, res) => {
+    try{
+        let kvUrl = "https://block2vault.vault.azure.net/secrets/secret?api-version=2016-10-01";
+        let token = (await getToken).access_token;
+        let secretData = axios.get(kvUrl, {headers: {'Authorization': `Bearer ${token}`}});
+        console.log("Printing secret data");
+        console.log(secretData);
 
     }catch(err) {
         console.log("Error occurred");
@@ -29,11 +39,9 @@ app.get('/testMe', async(req, res) => {
 
 const getToken = async () => {
     try{
-        console.log("Fetching the token")
         let tokenUrl = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net";
         let tokenData = await axios.get(tokenUrl, {headers: {'Metadata': 'true'}});
         return tokenData;
-
     }catch(err) {
         console.log("Error occurred");
         console.log(err);
