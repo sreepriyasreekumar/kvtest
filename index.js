@@ -50,9 +50,7 @@ app.put('/secret', async(req, res) => {
             let kvUrl = `https://block2vault.vault.azure.net/secrets/${req.body.name}?api-version=2016-10-01`;
             let token = await getToken();
             let updateSecretResult = await axios.put(kvUrl, {'value':req.body.value}, {headers: {'Authorization': `Bearer ${token}`}});
-            console.log(updateSecretResult);
-            console.log("Updated Secret");
-            res.status(200).send(updateSecretResult);
+            res.status(200).send(updateSecretResult.data);
         }else {
             res.status(500).send("Secret should have a name and value");
         } 
@@ -69,7 +67,7 @@ app.post('/secret', async(req, res) => {
         if(req.body.name && req.body.value) {
             let kvUrl = `https://block2vault.vault.azure.net/secrets/${req.body.name}?api-version=2016-10-01`;
             let token = await getToken();   
-            let createSecretResult = await axios.post(kvUrl, {headers: {'Authorization': `Bearer ${token}`}}, {body: {'value':req.body.value}});
+            let createSecretResult = await axios.post(kvUrl, {'value':req.body.value}, {headers: {'Authorization': `Bearer ${token}`}});
             console.log(createSecretResult);
             console.log("Created Secret");
             res.status(200).send(createSecretResult);
