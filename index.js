@@ -68,7 +68,7 @@ app.put('/secret', async(req, res) => {
         if(req.body.name && req.body.value) {
             let kvUrl = `https://block2vault.vault.azure.net/secrets/${req.body.name}?api-version=2016-10-01`;
             let token = await getToken();
-            let updateSecretResult = await axios.put(kvUrl, {headers: {'Authorization': `Bearer ${token}`}}, data={'value':req.body.value});
+            let updateSecretResult = await axios.put(kvUrl, {headers: {'Authorization': `Bearer ${token}`}}, {data:{'value':req.body.value}});
             console.log(updateSecretResult);
             console.log("Updated Secret");
             res.status(200).send(updateSecretResult);
