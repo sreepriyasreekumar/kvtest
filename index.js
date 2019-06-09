@@ -27,9 +27,7 @@ app.get('/secret', async(req, res) => {
         let tokenData = await getToken();   
         let token = tokenData.data.access_token;
         let secretData = await axios.get(kvUrl, {headers: {'Authorization': `Bearer ${token}`}});
-        console.log(secretData);
-        console.log("Secret printed");
-        res.status(200).send(secretData);
+        res.status(200).send(secretData.data);
     }catch(err) {
         console.log(err);
         console.log("Error occurred in secret fetch endpoint");
