@@ -13,7 +13,7 @@ app.listen(3000, () => {
 app.get('/token', async(req, res) => {
     try{
         let result = await getToken();
-        res.status(200).send(result.data);
+        res.status(200).send(result);
     }catch(err) {
         console.log(err);
         console.log("Error occurred in token fetching end point");
@@ -23,9 +23,8 @@ app.get('/token', async(req, res) => {
 
 app.get('/secret', async(req, res) => {
     try{
-        let kvUrl = "https://block2vault.vault.azure.net/secrets/secret?api-version=2016-10-01";
-        let tokenData = await getToken();   
-        let token = tokenData.data.access_token;
+        let kvUrl = `https://block2vault.vault.azure.net/secrets/${req.params.name}?api-version=2016-10-01`;
+        let token = await getToken();   
         let secretData = await axios.get(kvUrl, {headers: {'Authorization': `Bearer ${token}`}});
         res.status(200).send(secretData.data);
     }catch(err) {
@@ -35,12 +34,50 @@ app.get('/secret', async(req, res) => {
     }
 });
 
+app.post('/secret', async(req, res) => {
+    try{
+        if(req.body.name && req.body.value) {
+            let kvUrl = `https://block2vault.vault.azure.net/secrets/${req.body.name}?api-version=2016-10-01`;
+            let token = await getToken();   
+            let createSecretResult = await axios.post(kvUrl, {headers: {'Authorization': `Bearer ${token}`}}, data={'value':req.body.value});
+            console.log(createSecretResult);
+            console.log("Created Secret");
+            res.status(200).send(createSecretResult);
+        }else {
+            res.status(500).send("Secret should have a name and value");
+        }        
+    }catch(err) {
+        console.log(err);
+        console.log("Error occurred in secret create endpoint");
+        res.status(500).send(err);
+    }
+});
+
+app.put('/secret', async(req, res) => {
+    try{
+        if(req.body.name && req.body.value) {
+            let kvUrl = `https://block2vault.vault.azure.net/secrets/${req.body.name}?api-version=2016-10-01`;
+            let token = await getToken();
+            let updateSecretResult = await axios.put(kvUrl, {headers: {'Authorization': `Bearer ${token}`}}, data={'value':req.body.value});
+            console.log(updateSecretResult);
+            console.log("Updated Secret");
+            res.status(200).send(updateSecretResult);
+        }else {
+            res.status(500).send("Secret should have a name and value");
+        } 
+    }catch(err) {
+        console.log(err);
+        console.log("Error occurred in secret update endpoint");
+        res.status(500).send(err);
+    }
+})
+
 
 const getToken = async () => {
     try{
         let tokenUrl = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net";
         let tokenData = await axios.get(tokenUrl, {headers: {'Metadata': 'true'}});
-        return tokenData;
+        return tokenData.data.access_token;
     }catch(err) {
         console.log(err);
         console.log("Error occurred in fetching token");
