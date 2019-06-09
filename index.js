@@ -21,7 +21,7 @@ app.get('/token', async(req, res) => {
     }
 });
 
-app.get('/secret', async(req, res) => {
+app.get('/secret/:name', async(req, res) => {
     try{
         let kvUrl = `https://block2vault.vault.azure.net/secrets/${req.params.name}?api-version=2016-10-01`;
         let token = await getToken();   
