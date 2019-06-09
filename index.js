@@ -17,7 +17,7 @@ app.get('/testMe', async(req, res) => {
         let result = await getToken();
         console.log("Get token result: ");
         console.log(result);
-        res.status(200).send(result);
+        res.status(200).send(result.data);
 
     }catch(err) {
         console.log("Error occurred");
