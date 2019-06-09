@@ -70,8 +70,7 @@ app.put('/secret', async(req, res) => {
         console.log("Error occurred in secret update endpoint");
         res.status(500).send(err);
     }
-})
-
+});
 
 const getToken = async () => {
     try{
@@ -82,5 +81,5 @@ const getToken = async () => {
         console.log(err);
         console.log("Error occurred in fetching token");
     }
-}
+};
 
