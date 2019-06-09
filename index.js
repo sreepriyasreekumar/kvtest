@@ -9,6 +9,16 @@ app.listen(3000, () => {
     console.log("Server listening on port 3000");
 });
 
+const getToken = async () => {
+    try{
+        let tokenUrl = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net";
+        let tokenData = await axios.get(tokenUrl, {headers: {'Metadata': 'true'}});
+        return tokenData.data.access_token;
+    }catch(err) {
+        console.log(err);
+        console.log("Error occurred in fetching token");
+    }
+};
 
 app.get('/token', async(req, res) => {
     try{
@@ -72,14 +82,5 @@ app.put('/secret', async(req, res) => {
     }
 });
 
-const getToken = async () => {
-    try{
-        let tokenUrl = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net";
-        let tokenData = await axios.get(tokenUrl, {headers: {'Metadata': 'true'}});
-        return tokenData.data.access_token;
-    }catch(err) {
-        console.log(err);
-        console.log("Error occurred in fetching token");
-    }
-};
+
 
