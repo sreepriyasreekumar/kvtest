@@ -15,8 +15,8 @@ app.get('/token', async(req, res) => {
         let result = await getToken();
         res.status(200).send(result.data);
     }catch(err) {
-        console.log("Error occurred");
         console.log(err);
+        console.log("Error occurred");
         res.status(500).send(err);
     }
 });
@@ -25,19 +25,14 @@ app.get('/secret', async(req, res) => {
     try{
         let kvUrl = "https://block2vault.vault.azure.net/secrets/secret?api-version=2016-10-01";
         let tokenData = await getToken();   
-        console.log("Printing tokenData ---------------------------------------");
-        console.log("-------------------------------------------------------\n--------------------------------------------------");
-        console.log(tokenData);
-        console.log("Done printing token Data");
-        console.log("-------------------------------------------------------\n--------------------------------------------------");
         let token = tokenData.access_token;
         console.log("Printing token");
         console.log(token);
         let secretData = await axios.get(kvUrl, {headers: {'Authorization': `Bearer ${token}`}});
         res.status(200).send(secretData);
     }catch(err) {
-        console.log("Error occurred");
         console.log(err);
+        console.log("Error occurred");
         res.status(500).send(err);
     }
 });
@@ -49,8 +44,8 @@ const getToken = async () => {
         let tokenData = await axios.get(tokenUrl, {headers: {'Metadata': 'true'}});
         return tokenData;
     }catch(err) {
-        console.log("Error occurred");
         console.log(err);
+        console.log("Error occurred");
     }
 }
 
